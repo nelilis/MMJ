@@ -20,6 +20,7 @@
       <nav aria-label="Hauptnavigation">
         <a href="#programm">Das Programm</a>
         <a href="#compound">Der Spot</a>
+        <a href="#anmeldung">Anmeldung</a>
         <a class="nav-date" href="#programm">17—18 OKT ↗</a>
       </nav>
     </header>
@@ -83,6 +84,7 @@
               <span class="tag">DAY 02 / SEND IT</span>
               <h3>SLOPESTYLE<br>CONTEST.</h3>
               <p>Der Sonntag gehört dem Slopestyle Contest – und allen, die an der Line mitfiebern. 3 Judges. 400€ Preisgeld. 25€ Startgeld </p>
+              <a class="contest-signup" href="#anmeldung">ZUR ANMELDUNG ↗</a>
             </div>
             <span class="day-arrow" aria-hidden="true">↗</span>
           </article>
@@ -121,6 +123,45 @@
         </div>
       </section>
 
+      <!-- Contest-Anmeldung per E-Mail -->
+      <section id="anmeldung" class="registration section" aria-labelledby="registration-title">
+        <div class="section-top">
+          <p class="eyebrow">03 / SEI DABEI</p>
+          <p>18.10.2026 / MUTTERS</p>
+        </div>
+        <div class="registration-layout">
+          <div class="registration-copy">
+            <h2 id="registration-title">DEINE LINE.<br>DEIN <em>RUN.</em></h2>
+            <p>Melde dich zum Slopestyle Contest beim Mad Mutti Jam an.</p>
+            <p class="registration-facts">18. Oktober 2026<br>Slopestyle Compound, Mutters<br>25 € Startgeld · 400 € Preisgeld</p>
+          </div>
+          <form class="registration-form" id="registration-form" aria-describedby="registration-note">
+            <p class="registration-required">Mit * markierte Felder sind Pflichtfelder.</p>
+            <div class="registration-fields">
+              <div class="form-field">
+                <label for="first-name">Vorname *</label>
+                <input id="first-name" name="first_name" autocomplete="given-name" maxlength="100" required>
+              </div>
+              <div class="form-field">
+                <label for="last-name">Nachname *</label>
+                <input id="last-name" name="last_name" autocomplete="family-name" maxlength="100" required>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="registration-email">E-Mail *</label>
+              <input id="registration-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+            </div>
+            <div class="form-field">
+              <label for="registration-message">Nachricht (optional)</label>
+              <textarea id="registration-message" name="message" rows="4" maxlength="2000" placeholder="Hast du Fragen zum Contest?"></textarea>
+            </div>
+            <p id="registration-note" class="registration-note">Der Button öffnet dein E-Mail-Programm mit deiner Anmeldung an nelilisxd@gmail.com. Bitte sende die E-Mail dort ab. Dein Startplatz ist erst nach Bestätigung durch das Orga-Team reserviert.</p>
+            <button class="button" type="submit">ANMELDUNG PER E-MAIL <span aria-hidden="true">↗</span></button>
+            <p id="registration-status" class="registration-note" role="status"></p>
+            <noscript>Bitte melde dich direkt per E-Mail an nelilisxd@gmail.com an und gib deinen Vor- und Nachnamen an.</noscript>
+          </form>
+        </div>
+      </section>
       <!-- Abschluss: Veranstaltungsdatum -->
       <section class="closing">
         <p class="eyebrow">WIR SEHEN UNS AM COMPOUND.</p>
@@ -144,6 +185,30 @@
       const tickerCopy = tickerTrack.firstElementChild.cloneNode(true);
       tickerCopy.setAttribute('aria-hidden', 'true');
       tickerTrack.appendChild(tickerCopy);
+      document.getElementById('registration-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const firstName = data.get('first_name').trim();
+        const lastName = data.get('last_name').trim();
+        if (!firstName || !lastName) {
+          document.getElementById('registration-status').textContent = 'Bitte gib deinen Vor- und Nachnamen an.';
+          document.getElementById(!firstName ? 'first-name' : 'last-name').focus();
+          return;
+        }
+        const body = [
+          'Hallo Mad Mutti Jam Team,', '',
+          'ich möchte mich für den Slopestyle Contest am 18.10.2026 anmelden.', '',
+          'Vorname: ' + firstName,
+          'Nachname: ' + lastName,
+          'E-Mail: ' + data.get('email').trim(),
+          '', 'Nachricht:', data.get('message').trim() || 'Keine Nachricht', '',
+          'Bitte bestätigt mir meine Anmeldung und schickt mir die Infos zum Startgeld.'
+        ].join('\r\n');
+        window.location.href = 'mailto:nelilisxd@gmail.com?subject=' +
+          encodeURIComponent('Contest-Anmeldung – Mad Mutti Jam 2026') + '&body=' + encodeURIComponent(body);
+        document.getElementById('registration-status').textContent =
+          'Bitte sende die Anmeldung in deinem E-Mail-Programm ab. Falls sich kein Programm öffnet, schreibe direkt an nelilisxd@gmail.com. Deine Eingaben bleiben hier erhalten.';
+      });
     </script>
   </body>
 </html>
