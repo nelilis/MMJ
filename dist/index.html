@@ -38,18 +38,11 @@
         <div class="hero-content">
           <p class="eyebrow">ZWEI TAGE. ZWEI LINES.</p>
           <h1 id="title">MAD<br>MUTTI <span>JAM</span></h1>
-          <div class="hero-bottom">
-            <a class="button" href="#programm">CHECK DAS PROGRAMM <span></span></a>
-          </div>
         </div>
         <div class="stamp">RIDE.<br>HANG.<br>REPEAT.</div>
         <div class="photo-caption">PANORAMA COMPOUND / MUTTERS</div>
       </section>
 
-      <!-- Laufband: Highlights -->
-      <div class="ticker" aria-label="Jam all day, Slopestyle Contest, Barbecue und Firepit">
-        <div class="ticker-track"><span class="ticker-group">JAM ALL DAY <b>✳</b> SLOPESTYLE CONTEST <b>✳</b> BARBECUE <b>✳</b> FIREPIT <b>✳</b> GOOD TIMES <b>✳</b></span></div>
-      </div>
 
       <!-- Programm: Samstag und Sonntag -->
       <section id="programm" class="program section">
@@ -70,7 +63,10 @@
             <div class="day-content">
               <span class="tag">DAY 01 / SESSION MODE</span>
               <h3>JAM ALL<br>DAY LONG.</h3>
-              <p>Compound ganztägig befahrbar.</p>
+              <p>Jam all day long: 10:00 – Sunset<br>
+                Barbecue<br>
+                Music &amp; tunes<br>
+                15 € Tagesmitgliedschaft inkl. Versicherung (gilt nicht für Jahresmitglieder)</p>
             </div>
             <span class="day-arrow" aria-hidden="true"></span>
           </article>
@@ -157,7 +153,7 @@
             </div>
             <p id="registration-note" class="registration-note">Der Button öffnet dein E-Mail-Programm mit deiner Anmeldung an nelilisxd@gmail.com. Bitte sende die E-Mail dort ab. Dein Startplatz ist erst nach Bestätigung durch das Orga-Team reserviert.</p>
             <p class="registration-note">Wie der Verein deine Angaben verarbeitet, erfährst du in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
-            <button class="button" type="submit">ANMELDUNG PER E-MAIL <span aria-hidden="true">↗</span></button>
+            <button class="button" type="submit">ANMELDUNG PER E-MAIL</button>
             <p id="registration-status" class="registration-note" role="status"></p>
             <noscript>Bitte melde dich direkt per E-Mail an nelilisxd@gmail.com an und gib deinen Vor- und Nachnamen an.</noscript>
           </form>
@@ -177,15 +173,13 @@
     <!-- Fussbereich -->
     <footer>
       <a class="logo" href="#">MAD MUTTI<span>JAM / 2026</span></a>
-      <div class="legal-links" aria-label="Rechtliche Informationen"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
-      <a href="#">NACH OBEN ↑</a>
+      <div class="footer-info">
+        <div class="legal-links" aria-label="Rechtliche Informationen"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
+        <span class="site-credit">Website von Nils</span>
+      </div>
+      <a href="#">NACH OBEN</a>
     </footer>
       <script>
-      // Automatische Kopie: Laufband-Texte nur oben im HTML bearbeiten.
-      const tickerTrack = document.querySelector('.ticker-track');
-      const tickerCopy = tickerTrack.firstElementChild.cloneNode(true);
-      tickerCopy.setAttribute('aria-hidden', 'true');
-      tickerTrack.appendChild(tickerCopy);
       document.getElementById('registration-form').addEventListener('submit', function (event) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);

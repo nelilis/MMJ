@@ -62,5 +62,7 @@
 .legal-page a,.registration-note a{text-decoration:underline;text-underline-offset:3px}
 .legal-links{display:flex;flex-wrap:wrap;gap:16px 24px;font-size:14px;font-weight:700}
 .legal-links a{text-decoration:underline;text-underline-offset:4px}
+.footer-info{display:flex;flex-direction:column;gap:12px}
+.site-credit{font-size:12px;font-weight:400;color:#62635c}
 .legal-back{font-size:13px;font-weight:700}
 @media(max-width:440px){.legal-back{max-width:110px;text-align:right}.legal-page h2{font-size:21px}}
