@@ -5,7 +5,7 @@ Die Rechtstexte sind vorbereitet, aber noch nicht vollständig geprüft. Nicht a
 - Öffentlicher weiterer unmittelbarer Kontakt (z. B. Telefonnummer) fehlt im Impressum. ZVR-Zahl 1853085271 wurde vom Verein angegeben und übernommen.
 - Hoster bestätigen; Datenschutzerklärung Abschnitt 2 um Anbieter, tatsächliche Protokollierung, Speicherdauer und gegebenenfalls Drittlandtransfer ergänzen.
 - Vereinsname wurde exakt als „Panorama Compund Slopestyle Verein“ übernommen. Schreibweise mit Registerauszug abgleichen.
-- panoramacompound@gmail.com ist Vereins-/Datenschutzkontakt. Anmeldungen gehen vorerst weiterhin an die zuvor angegebene Adresse nelilisxd@gmail.com; gemeinsame Empfangsadresse noch bestätigen.
+- Empfangsadresse auf Wunsch auf panoramacompound@gmail.com vereinheitlicht. Contest-Anmeldung bleibt ein E-Mail-Entwurf; Online-Haftungserklärungen gehen über FormSubmit an diese Adresse.
 - 60 Tage Aufbewahrung wurden ab E-Mail-Eingang ausgelegt. Verein muss Löschung tatsächlich durchführen; Backups, Weiterleitungen und Zugriff der Organisatoren berücksichtigen. Bei frühen Anmeldungen kann diese Frist vor dem Event enden.
 - Gmail-Vertragsgrundlage, Vereinszugriff und tatsächliche Verarbeitung/Übermittlungen prüfen. Ein Informationstext ersetzt keine erforderlichen Vereinbarungen oder Schutzmaßnahmen.
 - Teilnahmebedingungen fehlen: Altersgrenze/Erziehungsberechtigte, Stichtag für 20 Teilnehmende, Wetterentscheidung, Absagekommunikation, Zahlung und Erstattung. Keine unbelegten Regelungen oder Haftungsausschlüsse eingefügt.
@@ -16,3 +16,10 @@ Quellen:
 - https://www.wko.at/ooe/wirtschaftsrecht-gewerberecht/das-korrekte-website-impressum-verein.pdf
 - https://www.wko.at/datenschutz/eu-dsgvo-informationspflichten
 - https://policies.google.com/privacy?hl=de
+## Online-Haftungsausschluss – Einrichtung
+
+- Originalvorlage liegt in `dist/formulare/haftungsausschluss-original.pdf`. Erklärungstext wurde aus der Vorlage übernommen. Digitale Bestätigung durch Namenseingabe und Pflicht-Checkbox; keine gezeichnete oder qualifizierte elektronische Signatur. Bei Minderjährigen Name und Bestätigung der erziehungsberechtigten Person. Die Identität wird technisch nicht überprüft.
+- Versand über `https://formsubmit.co/panoramacompound@gmail.com` mit nativer POST-Übermittlung und der standardmäßigen Sicherheitsabfrage. Kein API-Schlüssel nötig.
+- Nach Bereitstellung über HTTP(S) eine gekennzeichnete Testübermittlung durchführen, Aktivierungs-E-Mail im Empfängerpostfach bestätigen und danach eine weitere Übermittlung bis zum tatsächlichen E-Mail-Eingang prüfen. Hier wurde keine E-Mail ausgelöst. Ohne Aktivierung ist der Empfang nicht betriebsbereit.
+- FormSubmit als zusätzlichen Verarbeiter vor Livebetrieb prüfen: Vereinbarungen, Anbieter/Verarbeitungsorte, Löschfristen und gegebenenfalls Übermittlungsgrundlagen konkretisieren. Die öffentlichen Anbieterhinweise reichen für diese Angaben nicht aus. Datenschutzhinweis beschreibt den technischen Ablauf; er ersetzt diese Prüfung nicht.
+- Verein soll bestätigen, dass die digitale Bestätigung anstelle der PDF-Unterschrift akzeptiert wird und wie lange Haftungserklärungen tatsächlich benötigt werden. Die bestehende Aufbewahrungsvorgabe von 60 Tagen wurde vorläufig beibehalten.

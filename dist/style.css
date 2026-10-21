@@ -66,3 +66,17 @@
 .site-credit{font-size:12px;font-weight:400;color:#62635c}
 .legal-back{font-size:13px;font-weight:700}
 @media(max-width:440px){.legal-back{max-width:110px;text-align:right}.legal-page h2{font-size:21px}}
+
+/* Haftungsausschluss */
+.waiver-terms{border:1px solid #73746c;padding:20px;background:#fff;max-height:360px;overflow-y:auto;line-height:1.65;font-size:15px}
+.waiver-terms h3{font-size:30px;line-height:1.1;margin:0 0 16px}
+.waiver-terms p{margin:0 0 16px}
+.waiver-terms p:last-child{margin-bottom:0}
+.waiver-terms:focus-visible,.form-check input:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.form-check{display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.6;cursor:pointer}
+.form-check input{flex:0 0 auto;width:20px;height:20px;margin:3px 0 0;accent-color:var(--orange)}
+.guardian-fields{display:grid;gap:18px;border:1px solid #73746c;margin:0;padding:20px;min-width:0}
+.guardian-fields[hidden]{display:none}
+.guardian-fields legend{font-weight:700;padding:0 6px}
+.form-trap{display:none}
+.registration-form .button{cursor:pointer}
