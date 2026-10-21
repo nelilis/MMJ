@@ -4,14 +4,14 @@
   const date = document.getElementById('waiver-date');
   const minor = document.getElementById('waiver-minor');
   const guardian = document.getElementById('guardian-fields');
-  const signature = document.getElementById('waiver-signature');
   const today = new Date();
   const localDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   date.value = localDate;
   date.max = localDate;
   birth.max = localDate;
   document.getElementById('waiver-text-value').value = document.getElementById('waiver-terms').innerText;
-  form.querySelector('button[type="submit"]').disabled = false;
+  const createButton = document.getElementById('pdf-create');
+  createButton.disabled = false;
 
   function updateGuardian() {
     let underage = false;
@@ -23,11 +23,9 @@
     }
     guardian.hidden = !minor.checked;
     guardian.disabled = !minor.checked;
-    signature.setCustomValidity('');
   }
   birth.addEventListener('input', updateGuardian);
   minor.addEventListener('change', updateGuardian);
-  form.addEventListener('input', () => signature.setCustomValidity(''));
   const canvas = document.getElementById('signature-canvas');
   const context = canvas.getContext('2d');
   const attachment = document.getElementById('signature-file');
@@ -111,39 +109,166 @@
     status.textContent = 'Unterschrift als Bild ausgewählt.';
   });
 
-  form.addEventListener('submit', (event) => {
-    updateGuardian();
-    const inputs = [...form.querySelectorAll('input[required]:not(:disabled)')];
-    inputs.forEach(input => {
-      if (!['checkbox', 'date'].includes(input.type)) input.value = input.value.trim();
+  const pdfFile = document.getElementById('pdf-file');
+  const review = document.getElementById('pdf-review');
+  const confirm = document.getElementById('pdf-confirm');
+  const sendButton = document.getElementById('pdf-send');
+  const pdfStatus = document.getElementById('pdf-status');
+  const preview = document.getElementById('pdf-preview');
+  const documentId = document.getElementById('pdf-document-id');
+  let revision = 0;
+  let generatedRevision = -1;
+  let pdfUrl = null;
+  let creating = false;
+  let fontPromise;
+
+  function invalidatePdf() {
+    revision++;
+    generatedRevision = -1;
+    confirm.checked = false;
+    confirm.disabled = true;
+    sendButton.disabled = true;
+    pdfFile.value = '';
+    documentId.value = '';
+    if (pdfUrl) {
+      URL.revokeObjectURL(pdfUrl);
+      pdfUrl = null;
+      pdfStatus.textContent = 'Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.';
+    }
+    review.hidden = true;
+    preview.removeAttribute('src');
+    document.getElementById('pdf-open').removeAttribute('href');
+    document.getElementById('pdf-download').removeAttribute('href');
+  }
+  form.addEventListener('input', event => {
+    if (event.target !== confirm) invalidatePdf();
+  });
+  canvas.addEventListener('pointerdown', invalidatePdf);
+  document.getElementById('signature-clear').addEventListener('click', invalidatePdf);
+  attachment.addEventListener('change', invalidatePdf);
+  confirm.addEventListener('change', () => {
+    sendButton.disabled = !confirm.checked || generatedRevision !== revision;
+  });
+
+  function base64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 8192) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+    }
+    return btoa(binary);
+  }
+  function loadFont() {
+    if (!fontPromise) {
+      fontPromise = fetch('../assets/fonts/Barlow-Regular.ttf').then(response => {
+        if (!response.ok) throw new Error('Schrift konnte nicht geladen werden.');
+        return response.arrayBuffer();
+      }).then(base64).catch(error => { fontPromise = null; throw error; });
+    }
+    return fontPromise;
+  }
+  async function signatureImage() {
+    if (inkLength >= 20) return {url: canvas.toDataURL('image/png'), width: canvas.width, height: canvas.height, format: 'PNG'};
+    const file = attachment.files[0];
+    if (!file || !['image/png', 'image/jpeg'].includes(file.type) || !file.size || file.size > 2 * 1024 * 1024) {
+      throw new Error('Bitte unterschreibe im Feld oder lade ein PNG-/JPG-Bild mit maximal 2 MB hoch.');
+    }
+    const url = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error('Das Unterschriftsbild konnte nicht gelesen werden.'));
+      reader.readAsDataURL(file);
     });
-    const normalize = value => value.trim().replace(/\s+/g, ' ').toLocaleLowerCase('de');
-    const expectedName = minor.checked
-      ? document.getElementById('guardian-name').value
-      : `${document.getElementById('waiver-first').value} ${document.getElementById('waiver-last').value}`;
-    if (normalize(signature.value) !== normalize(expectedName)) {
-      signature.setCustomValidity('Bitte gib den vollständigen Namen der bestätigenden Person wie oben ein.');
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Das Unterschriftsbild ist ungültig. Bitte wähle ein anderes Bild.'));
+      img.src = url;
+    });
+    if (!image.naturalWidth || !image.naturalHeight || image.naturalWidth * image.naturalHeight > 20000000) {
+      throw new Error('Das Unterschriftsbild ist zu groß oder ungültig. Bitte ein kleineres Bild wählen.');
     }
+    return {url, width: image.naturalWidth, height: image.naturalHeight, format: file.type === 'image/png' ? 'PNG' : 'JPEG'};
+  }
+  function formattedDate(value) { return value.split('-').reverse().join('.'); }
+  createButton.addEventListener('click', async () => {
+    if (creating) return;
+    updateGuardian();
+    form.querySelectorAll('input[required]:not(:disabled)').forEach(input => {
+      if (!['checkbox', 'date', 'file'].includes(input.type)) input.value = input.value.trim();
+    });
+    // Die Freigabe wird erst nach der PDF-Vorschau benötigt.
+    invalidatePdf();
     attachment.setCustomValidity('');
-    if (inkLength >= 20) {
+    if (!form.reportValidity()) return;
+    creating = true;
+    createButton.disabled = true;
+    const currentRevision = revision;
+    pdfStatus.textContent = 'Dein unterschriebenes PDF wird erstellt …';
+    try {
+      if (!window.jspdf || !window.buildWaiverPdf) throw new Error('Die PDF-Funktion konnte nicht geladen werden. Bitte lade die Seite erneut.');
+      const data = {
+        documentId: crypto.randomUUID(),
+        firstName: document.getElementById('waiver-first').value,
+        lastName: document.getElementById('waiver-last').value,
+        email: document.getElementById('waiver-email').value,
+        phone: document.getElementById('waiver-phone').value,
+        emergency: document.getElementById('waiver-emergency').value,
+        birthDate: formattedDate(birth.value), date: formattedDate(date.value),
+        minor: minor.checked, guardianName: guardian.disabled ? '' : document.getElementById('guardian-name').value,
+        createdAt: new Date().toLocaleString('de-AT'),
+        clauses: [...document.querySelectorAll('.waiver-clause')].map(clause => ({
+          title: clause.querySelector('h3').textContent.replace(/^\s*\d+\s*/, ''),
+          text: clause.querySelector('p').textContent
+        }))
+      };
+      const [signature, font] = await Promise.all([signatureImage(), loadFont()]);
+      if (currentRevision !== revision) throw new Error('Die Angaben wurden während der Erstellung geändert. Bitte erstelle das PDF erneut.');
+      data.signature = signature;
+      const pdf = window.buildWaiverPdf(window.jspdf.jsPDF, data, font);
+      const blob = pdf.output('blob');
+      if (blob.size > 9 * 1024 * 1024) throw new Error('Das PDF ist zu groß für den Versand. Bitte verwende ein kleineres Unterschriftsbild.');
+      const filename = `haftungsausschluss-${date.value}-${data.documentId.slice(0, 8)}.pdf`;
+      pdfUrl = URL.createObjectURL(blob);
+      preview.src = pdfUrl;
+      const download = document.getElementById('pdf-download');
+      download.href = pdfUrl;
+      download.download = filename;
+      document.getElementById('pdf-open').href = pdfUrl;
+      review.hidden = false;
+      document.getElementById('pdf-review-title').focus();
       try {
-        const encoded = canvas.toDataURL('image/png').split(',')[1];
-        const bytes = Uint8Array.from(atob(encoded), char => char.charCodeAt(0));
         const transfer = new DataTransfer();
-        transfer.items.add(new File([bytes], 'unterschrift.png', {type: 'image/png'}));
-        attachment.files = transfer.files;
-        if (!attachment.files.length) throw new Error('Unterschrift fehlt');
+        transfer.items.add(new File([blob], filename, {type: 'application/pdf'}));
+        pdfFile.files = transfer.files;
+        if (!pdfFile.files.length) throw new Error('Kein PDF angehängt.');
       } catch (error) {
-        attachment.setCustomValidity('Die gezeichnete Unterschrift kann in diesem Browser nicht angehängt werden. Bitte lade stattdessen ein Bild deiner Unterschrift hoch.');
-        status.textContent = 'Bitte die Unterschrift über das Bildfeld hochladen; der Browser unterstützt den Zeichenversand nicht.';
+        throw new Error('Dein Browser unterstützt den direkten PDF-Versand nicht. Lade das PDF herunter und sende es als Anhang an panoramacompound@gmail.com.');
       }
-    } else if (!attachment.files.length) {
-      attachment.setCustomValidity('Bitte unterschreibe im Feld oder lade ein Bild deiner Unterschrift hoch.');
-      status.textContent = 'Unterschrift fehlt. Bitte im Feld unterschreiben oder ein Bild hochladen.';
+      documentId.value = data.documentId;
+      generatedRevision = currentRevision;
+      confirm.disabled = false;
+      pdfStatus.textContent = 'PDF erstellt. Bitte prüfe das Dokument und bestätige es unten vor dem Versand.';
+    } catch (error) {
+      pdfStatus.textContent = error.message || 'Das PDF konnte nicht erstellt werden. Bitte versuche es erneut.';
+    } finally {
+      creating = false;
+      createButton.disabled = false;
     }
-    if (!form.checkValidity()) {
+  });
+
+  form.addEventListener('submit', event => {
+    if (creating || generatedRevision !== revision || !confirm.checked || !pdfFile.files.length || !form.checkValidity()) {
       event.preventDefault();
+      pdfStatus.textContent = 'Bitte erstelle das aktuelle PDF, prüfe es und bestätige anschließend den Versand.';
       form.reportValidity();
+    }
+  });
+  // Enter in einem Textfeld soll nicht unbeabsichtigt zur Versandseite wechseln.
+  form.addEventListener('keydown', event => {
+    if (event.key === 'Enter' && event.target.tagName === 'INPUT' && !['checkbox', 'file'].includes(event.target.type)) {
+      event.preventDefault();
+      createButton.click();
     }
   });
 })();

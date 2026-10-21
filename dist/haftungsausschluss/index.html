@@ -7,6 +7,8 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Haftungsausschluss | Mad Mutti Jam</title>
   <link rel="stylesheet" href="../style.css">
+  <script src="../assets/vendor/jspdf-4.2.1.umd.min.js" defer></script>
+  <script src="../haftung-pdf.js" defer></script>
   <script src="../haftung.js" defer></script>
 </head>
 <body class="waiver-page">
@@ -20,18 +22,24 @@
         <div class="registration-layout">
           <div class="registration-copy">
             <h1 id="waiver-title">DEIN<br><em>HAFTUNGS-<br>AUSSCHLUSS.</em></h1>
-            <p>Haftungsausschluss des Panorama Compund Slopestyle Vereins online ausfüllen und an panoramacompound@gmail.com senden.</p>
+            <p>Haftungsausschluss ausfüllen, unterschreiben und als PDF prüfen. Erst nach deiner Bestätigung wird das Dokument an panoramacompound@gmail.com gesendet.</p>
             <p class="registration-note"><a href="../formulare/haftungsausschluss-original.pdf" target="_blank" rel="noopener">Originalformular als PDF ansehen</a></p>
             <p>Dieses Formular ersetzt keine Contest-Anmeldung.</p>
           </div>
           <form class="registration-form" id="waiver-form" action="https://formsubmit.co/panoramacompound@gmail.com" method="post" enctype="multipart/form-data">
             <input type="hidden" name="_subject" value="Haftungsausschluss – Panorama Compound">
             <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="Formularversion" value="Onlinefassung mit Unterschrift 21.10.2026 – verlinkte PDF-Vorlage">
+            <input type="hidden" name="Formularversion" value="PDF-Fassung mit Unterschrift 21.10.2026 – verlinkte PDF-Vorlage">
             <input type="hidden" name="Erklaerung" id="waiver-text-value">
             <div class="form-trap" aria-hidden="true"><label>Dieses Feld bitte leer lassen<input name="_honey" tabindex="-1" autocomplete="off"></label></div>
             <p class="registration-required">Mit * markierte Felder sind Pflichtfelder.</p>
-            <div class="waiver-terms" id="waiver-terms" tabindex="0" role="region" aria-label="Haftungsausschluss im Wortlaut"><h3>Haftungsausschluss</h3><p>Mir ist bewusst, dass das Befahren des Slopestyle- und Speed-und-Style-Geländes des Panorama  Compound Slopestyle Vereins in Mutters Risikosportarten sind, bei denen Fehler und mögliche  Stürze schwerwiegende Folgen haben können. Ich verfüge über die nötige Disziplin, gesunde  Selbsteinschätzung und Risikowahrnehmung, um diesen Sport verantwortungsvoll auszuüben. Ich  versichere hiermit, die Benutzerordnung und die Vereins-Regeln zu kennen und verstanden zu  haben. Diese erkenne ich an und werde mich an sie halten. Ich werde mich ferner an die  Anweisungen des Bikepark-Personals halten. Bei Unsicherheiten, Fragen oder beim Erkennen von  Mängeln an der Anlage werde ich mich an das Bikepark-Personal wenden. </p><p>Ich bekräftige hiermit ausdrücklich, dass ich das Panorama Compound Slopestyle-Gelände  eigenverantwortlich und auf eigenes Risiko nutze. Für selbstverschuldete Personen- und  Sachschäden hafte ich persönlich, nicht der Betreiber oder der Verein des Bikeparks. Die Haftung des  Betreibers ist generell ausgeschlossen, sofern nicht Vorsatz, Pflichtverletzung oder Fahrlässigkeit  vorliegen. Auch für Garderobe, Wertsachen oder Verlust und Verschleiß von Bike-Ausrüstung wird  keine Haftung seitens des Vereins übernommen.</p></div>
+            <div class="waiver-terms" id="waiver-terms" role="region" aria-labelledby="terms-title">
+              <h2 id="terms-title">Haftungsausschluss</h2>
+              <section class="waiver-clause"><h3><span aria-hidden="true">01</span>Risiken &amp; Selbsteinschätzung</h3><p>Mir ist bewusst, dass das Befahren des Slopestyle- und Speed-und-Style-Geländes des Panorama Compound Slopestyle Vereins in Mutters Risikosportarten sind, bei denen Fehler und mögliche Stürze schwerwiegende Folgen haben können. Ich verfüge über die nötige Disziplin, gesunde Selbsteinschätzung und Risikowahrnehmung, um diesen Sport verantwortungsvoll auszuüben.</p></section>
+              <section class="waiver-clause"><h3><span aria-hidden="true">02</span>Regeln &amp; Verhalten am Gelände</h3><p>Ich versichere hiermit, die Benutzerordnung und die Vereins-Regeln zu kennen und verstanden zu haben. Diese erkenne ich an und werde mich an sie halten. Ich werde mich ferner an die Anweisungen des Bikepark-Personals halten. Bei Unsicherheiten, Fragen oder beim Erkennen von Mängeln an der Anlage werde ich mich an das Bikepark-Personal wenden.</p></section>
+              <section class="waiver-clause"><h3><span aria-hidden="true">03</span>Eigenverantwortung &amp; Haftung</h3><p>Ich bekräftige hiermit ausdrücklich, dass ich das Panorama Compound Slopestyle-Gelände eigenverantwortlich und auf eigenes Risiko nutze. Für selbstverschuldete Personen- und Sachschäden hafte ich persönlich, nicht der Betreiber oder der Verein des Bikeparks. Die Haftung des Betreibers ist generell ausgeschlossen, sofern nicht Vorsatz, Pflichtverletzung oder Fahrlässigkeit vorliegen.</p></section>
+              <section class="waiver-clause"><h3><span aria-hidden="true">04</span>Garderobe &amp; Ausrüstung</h3><p>Auch für Garderobe, Wertsachen oder Verlust und Verschleiß von Bike-Ausrüstung wird keine Haftung seitens des Vereins übernommen.</p></section>
+            </div>
             <div class="registration-fields">
               <div class="form-field"><label for="waiver-first">Vorname *</label><input id="waiver-first" name="Vorname" autocomplete="given-name" maxlength="100" required></div>
               <div class="form-field"><label for="waiver-last">Nachname *</label><input id="waiver-last" name="Nachname" autocomplete="family-name" maxlength="100" required></div>
@@ -49,21 +57,31 @@
             <label class="form-check"><input id="waiver-minor" name="Minderjaehrig" type="checkbox" value="Ja"><span>Ich bin minderjährig (unter 18 Jahre).</span></label>
             <fieldset id="guardian-fields" class="guardian-fields" hidden disabled>
               <legend>Erziehungsberechtigte Person</legend>
-              <div class="form-field"><label for="guardian-name">Vor- und Nachname der erziehungsberechtigten Person *</label><input id="guardian-name" name="Erziehungsberechtigte Person" autocomplete="off" maxlength="200" required></div>
+              <div class="form-field"><label for="guardian-name">Vollständiger Name der erziehungsberechtigten Person *</label><input id="guardian-name" name="Erziehungsberechtigte Person" autocomplete="off" maxlength="200" required></div>
               <label class="form-check"><input type="checkbox" name="Bestaetigung Erziehungsberechtigte" value="Ich bestätige als erziehungsberechtigte Person die Erklärung für die minderjährige Person." required><span>Ich bestätige als erziehungsberechtigte Person die Erklärung für die oben genannte minderjährige Person. *</span></label>
             </fieldset>
-            <div class="form-field"><label for="waiver-signature">Vollständiger Name der unterschreibenden Person *</label><input id="waiver-signature" name="Digitale Bestaetigung" autocomplete="off" maxlength="200" required aria-describedby="signature-help"><p id="signature-help" class="registration-note">Vollständigen Namen der bestätigenden Person eingeben. Bei Minderjährigen bestätigt die erziehungsberechtigte Person.</p></div>
             <div class="signature-field">
               <p id="signature-label" class="signature-label">Unterschrift *</p>
               <p id="drawing-help" class="registration-note">Mit Finger, Stift oder Maus im Feld unterschreiben. Bei Minderjährigen unterschreibt die erziehungsberechtigte Person. Alternativ kannst du ein Bild deiner Unterschrift hochladen.</p>
               <canvas id="signature-canvas" width="1000" height="350" aria-labelledby="signature-label" aria-describedby="drawing-help" role="img">Bitte lade deine Unterschrift über das Bildfeld unten hoch.</canvas>
               <button type="button" id="signature-clear" class="signature-clear">Unterschrift löschen</button>
-              <div class="form-field signature-upload"><label for="signature-file">Alternativ: Unterschrift als Bild hochladen (PNG/JPG, max. 2 MB)</label><input id="signature-file" name="attachment" type="file" accept="image/png,image/jpeg" aria-describedby="signature-status"></div>
+              <div class="form-field signature-upload"><label for="signature-file">Alternativ: Unterschrift als Bild hochladen (PNG/JPG, max. 2 MB)</label><input id="signature-file" type="file" accept="image/png,image/jpeg" aria-describedby="signature-status"></div>
               <p id="signature-status" class="registration-note" role="status" aria-live="polite">Noch keine Unterschrift vorhanden.</p>
             </div>
             <label class="form-check"><input name="Erklaerung bestaetigt" type="checkbox" value="Ich habe den oben stehenden Haftungsausschluss gelesen und bestätige ihn mit meiner Unterschrift." required><span>Ich habe den oben stehenden Haftungsausschluss gelesen und bestätige ihn mit meiner Unterschrift. *</span></label>
-            <p class="registration-note">Beim Absenden werden deine Angaben einschließlich der Erklärung und deiner Unterschrift als Bildanhang über FormSubmit an panoramacompound@gmail.com übermittelt. Anschließend öffnet sich die Versandseite mit einer Sicherheitsabfrage. Informationen zur Verarbeitung findest du in der <a href="../datenschutz.html">Datenschutzerklärung</a>.</p>
-            <button class="button" type="submit" disabled>ERKLÄRUNG ABSENDEN</button>
+            <button class="button" id="pdf-create" type="button" disabled>PDF ERSTELLEN &amp; PRÜFEN</button>
+            <p id="pdf-status" class="registration-note" role="status" aria-live="polite">Dein PDF wird direkt auf diesem Gerät erstellt. Dabei werden noch keine Formulardaten versendet.</p>
+            <input id="pdf-file" name="attachment" type="file" accept="application/pdf" hidden>
+            <input id="pdf-document-id" name="Dokument-ID" type="hidden">
+            <section id="pdf-review" class="pdf-review" aria-labelledby="pdf-review-title" hidden>
+              <h2 id="pdf-review-title" tabindex="-1">Dein PDF prüfen</h2>
+              <p class="registration-note">Prüfe den Erklärungstext, deine Angaben und die Unterschrift. Du kannst das Dokument auch öffnen oder für dich herunterladen.</p>
+              <iframe id="pdf-preview" title="Vorschau deines unterschriebenen Haftungsausschlusses"></iframe>
+              <div class="pdf-actions"><a id="pdf-open" target="_blank" rel="noopener">PDF öffnen</a><a id="pdf-download" download="haftungsausschluss.pdf">PDF herunterladen</a></div>
+              <label class="form-check"><input id="pdf-confirm" name="PDF-Freigabe" type="checkbox" value="Ich habe das erzeugte PDF geprüft und bestätige dessen Inhalt und den Versand an panoramacompound@gmail.com." required disabled><span>Ich habe das PDF geprüft und bestätige den Inhalt sowie den Versand an panoramacompound@gmail.com. *</span></label>
+              <p class="registration-note">Erst mit dem folgenden Button werden deine Angaben und das unterschriebene PDF über FormSubmit an panoramacompound@gmail.com übermittelt. Auf der Versandseite folgt eine Sicherheitsabfrage. Weitere Informationen findest du in der <a href="../datenschutz.html">Datenschutzerklärung</a>.</p>
+              <button class="button" id="pdf-send" type="submit" disabled>PDF BESTÄTIGEN &amp; VERSENDEN</button>
+            </section>
             <p class="registration-note">Falls der Versand fehlschlägt, bleiben deine Eingaben über die Zurück-Funktion des Browsers in der Regel erhalten. Alternativ kannst du das Originalformular ausgefüllt an <a href="mailto:panoramacompound@gmail.com">panoramacompound@gmail.com</a> schicken.</p>
             <noscript>Für die Onlinebestätigung aktiviere bitte JavaScript oder verwende das verlinkte Originalformular.</noscript>
           </form>
