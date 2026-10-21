@@ -80,3 +80,17 @@
 .guardian-fields legend{font-weight:700;padding:0 6px}
 .form-trap{display:none}
 .registration-form .button{cursor:pointer}
+
+/* Separate Seite für den Haftungsausschluss */
+.waiver-page .registration-copy h1{font-size:clamp(48px,5.6vw,88px);line-height:.95;overflow-wrap:anywhere}
+.waiver-page .registration-layout{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+.signature-field{display:grid;gap:12px;min-width:0}
+.signature-label{margin:0;font-size:15px;font-weight:700}
+#signature-canvas{display:block;width:100%;height:auto;aspect-ratio:20/7;background:#fff;border:1px solid #73746c;touch-action:none;cursor:crosshair}
+.signature-clear{justify-self:start;border:1px solid var(--black);padding:10px 14px;background:transparent;color:var(--black);font:600 14px 'Barlow',Arial,sans-serif;cursor:pointer}
+.signature-clear:hover{background:#e0e0d6}
+.signature-clear:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.signature-upload{margin-top:8px}
+.signature-upload label{font-size:14px;line-height:1.5}
+.signature-upload input{padding:10px;max-width:100%}
+@media(max-width:800px){.waiver-page .registration-layout{grid-template-columns:1fr}.waiver-page .registration-copy h1{font-size:clamp(48px,10vw,76px)}}
