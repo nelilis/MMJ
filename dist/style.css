@@ -107,7 +107,10 @@
 .pdf-review{display:grid;gap:20px;border:1px solid #c4c5bb;background:#fff;padding:clamp(16px,3vw,26px);min-width:0}
 .pdf-review[hidden]{display:none}
 .pdf-review h2{font:800 32px/1.1 'Barlow Condensed',sans-serif;letter-spacing:0}
-#pdf-preview{display:block;width:100%;height:560px;border:1px solid #c4c5bb;background:#ecece5}
+#pdf-preview{display:grid;gap:20px;min-width:0;width:100%;padding:12px;border:1px solid #c4c5bb;background:#ecece5}
+.pdf-preview-page{min-width:0}
+.pdf-preview-page figcaption{padding:0 0 9px;font-size:13px;letter-spacing:0;font-weight:600}
+.pdf-preview-page canvas{display:block;width:100%;height:auto;background:#fff;box-shadow:0 1px 5px #15161420}
 .pdf-actions{display:flex;flex-wrap:wrap;gap:16px 24px;font-weight:700;font-size:15px}
 .pdf-actions a{text-decoration:underline;text-underline-offset:4px}
-@media(max-width:600px){#pdf-preview{height:400px}}
+@media(max-width:600px){#pdf-preview{padding:8px;gap:16px}}

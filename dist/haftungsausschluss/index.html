@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../style.css">
   <script src="../assets/vendor/jspdf-4.2.1.umd.min.js" defer></script>
   <script src="../haftung-pdf.js" defer></script>
+  <script src="../haftung-preview.js" defer></script>
   <script src="../haftung.js" defer></script>
 </head>
 <body class="waiver-page">
@@ -76,7 +77,7 @@
             <section id="pdf-review" class="pdf-review" aria-labelledby="pdf-review-title" hidden>
               <h2 id="pdf-review-title" tabindex="-1">Dein PDF prüfen</h2>
               <p class="registration-note">Prüfe den Erklärungstext, deine Angaben und die Unterschrift. Du kannst das Dokument auch öffnen oder für dich herunterladen.</p>
-              <iframe id="pdf-preview" title="Vorschau deines unterschriebenen Haftungsausschlusses"></iframe>
+              <div id="pdf-preview" role="region" aria-label="Alle Seiten deines unterschriebenen Haftungsausschlusses" aria-busy="false"></div>
               <div class="pdf-actions"><a id="pdf-open" target="_blank" rel="noopener">PDF öffnen</a><a id="pdf-download" download="haftungsausschluss.pdf">PDF herunterladen</a></div>
               <label class="form-check"><input id="pdf-confirm" name="PDF-Freigabe" type="checkbox" value="Ich habe das erzeugte PDF geprüft und bestätige dessen Inhalt und den Versand an panoramacompound@gmail.com." required disabled><span>Ich habe das PDF geprüft und bestätige den Inhalt sowie den Versand an panoramacompound@gmail.com. *</span></label>
               <p class="registration-note">Erst mit dem folgenden Button werden deine Angaben und das unterschriebene PDF über FormSubmit an panoramacompound@gmail.com übermittelt. Auf der Versandseite folgt eine Sicherheitsabfrage. Weitere Informationen findest du in der <a href="../datenschutz.html">Datenschutzerklärung</a>.</p>

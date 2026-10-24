@@ -136,7 +136,9 @@
       pdfStatus.textContent = 'Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.';
     }
     review.hidden = true;
-    preview.removeAttribute('src');
+    preview.querySelectorAll('canvas').forEach(canvas => { canvas.width = 0; canvas.height = 0; });
+    preview.replaceChildren();
+    preview.setAttribute('aria-busy', 'false');
     document.getElementById('pdf-open').removeAttribute('href');
     document.getElementById('pdf-download').removeAttribute('href');
   }
@@ -230,13 +232,23 @@
       if (blob.size > 9 * 1024 * 1024) throw new Error('Das PDF ist zu groß für den Versand. Bitte verwende ein kleineres Unterschriftsbild.');
       const filename = `haftungsausschluss-${date.value}-${data.documentId.slice(0, 8)}.pdf`;
       pdfUrl = URL.createObjectURL(blob);
-      preview.src = pdfUrl;
+      preview.textContent = 'Alle PDF-Seiten werden für die Vorschau geladen …';
       const download = document.getElementById('pdf-download');
       download.href = pdfUrl;
       download.download = filename;
       document.getElementById('pdf-open').href = pdfUrl;
       review.hidden = false;
       document.getElementById('pdf-review-title').focus();
+      try {
+        await window.renderWaiverPreview(blob, preview, () => currentRevision === revision);
+      } catch (error) {
+        if (currentRevision === revision) {
+          preview.replaceChildren();
+          preview.textContent = 'Die Vorschau konnte nicht geladen werden. Bitte öffne oder lade das PDF über die Links unten und prüfe dort alle Seiten vor dem Versand.';
+          preview.setAttribute('aria-busy', 'false');
+        }
+      }
+      if (currentRevision !== revision) throw new Error('Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.');
       try {
         const transfer = new DataTransfer();
         transfer.items.add(new File([blob], filename, {type: 'application/pdf'}));
