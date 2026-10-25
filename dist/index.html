@@ -9,6 +9,7 @@
     <title>Mad Mutti Jam — 17. & 18. Oktober 2026 · Mutters</title>
     <meta name="description" content="Zwei Tage MTB am Slopestyle Compound in Mutters: Jam all day long am 17.10.2026, Slopestyle Contest am 18.10.2026. Mit Barbecue und Firepit.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ff501a'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='Arial' font-weight='900' font-size='44'%3EM%3C/text%3E%3C/svg%3E">
+    <script src="i18n.js" defer></script>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
@@ -17,12 +18,13 @@
     <!-- Kopfbereich: Logo und Navigation -->
     <header>
       <a class="logo" href="#" aria-label="Mad Mutti Jam Startseite">MAD MUTTI<span>JAM / 2026</span></a>
-      <nav aria-label="Hauptnavigation">
+      <div class="header-actions"><nav aria-label="Hauptnavigation">
         <a href="#programm">Das Programm</a>
         <a href="#compound">Der Spot</a>
         <a href="#anmeldung">Anmeldung</a>
         <a class="nav-date" href="#programm">17—18 OKT</a>
       </nav>
+    <div class="language-switch" role="group" aria-label="Sprachauswahl"><button type="button" data-language="de" lang="de" aria-label="Auf Deutsch wechseln" aria-pressed="true">DE</button><button type="button" data-language="en" lang="en" aria-label="Switch to English" aria-pressed="false">EN</button></div></div>
     </header>
     <main>
 
@@ -182,27 +184,28 @@
       <script>
       document.getElementById('registration-form').addEventListener('submit', function (event) {
         event.preventDefault();
+        const t = window.mmjI18n.t;
         const data = new FormData(event.currentTarget);
         const firstName = data.get('first_name').trim();
         const lastName = data.get('last_name').trim();
         if (!firstName || !lastName) {
-          document.getElementById('registration-status').textContent = 'Bitte gib deinen Vor- und Nachnamen an.';
+          document.getElementById('registration-status').textContent = t('Bitte gib deinen Vor- und Nachnamen an.');
           document.getElementById(!firstName ? 'first-name' : 'last-name').focus();
           return;
         }
         const body = [
-          'Hallo Mad Mutti Jam Team,', '',
-          'ich möchte mich für den Slopestyle Contest am 18.10.2026 anmelden.', '',
-          'Vorname: ' + firstName,
-          'Nachname: ' + lastName,
-          'E-Mail: ' + data.get('email').trim(),
-          '', 'Nachricht:', data.get('message').trim() || 'Keine Nachricht', '',
-          'Bitte bestätigt mir meine Anmeldung und schickt mir die Infos zum Startgeld.'
+          t('Hallo Mad Mutti Jam Team,'), '',
+          t('ich möchte mich für den Slopestyle Contest am 18.10.2026 anmelden.'), '',
+          t('Vorname: ') + firstName,
+          t('Nachname: ') + lastName,
+          t('E-Mail: ') + data.get('email').trim(),
+          '', t('Nachricht:'), data.get('message').trim() || t('Keine Nachricht'), '',
+          t('Bitte bestätigt mir meine Anmeldung und schickt mir die Infos zum Startgeld.')
         ].join('\r\n');
         window.location.href = 'mailto:panoramacompound@gmail.com?subject=' +
-          encodeURIComponent('Contest-Anmeldung – Mad Mutti Jam 2026') + '&body=' + encodeURIComponent(body);
+          encodeURIComponent(t('Contest-Anmeldung – Mad Mutti Jam 2026')) + '&body=' + encodeURIComponent(body);
         document.getElementById('registration-status').textContent =
-          'Bitte sende die Anmeldung in deinem E-Mail-Programm ab. Falls sich kein Programm öffnet, schreibe direkt an panoramacompound@gmail.com. Deine Eingaben bleiben hier erhalten.';
+          t('Bitte sende die Anmeldung in deinem E-Mail-Programm ab. Falls sich kein Programm öffnet, schreibe direkt an panoramacompound@gmail.com. Deine Eingaben bleiben hier erhalten.');
       });
     </script>
   </body>

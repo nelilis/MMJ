@@ -1,5 +1,6 @@
 /* PDF.js wird erst für die Vorschau geladen; sämtliche Dateien bleiben lokal. */
 (() => {
+  const t = window.mmjI18n.t;
   const workerUrl = new URL('assets/vendor/pdfjs/pdf.worker.min.mjs', document.currentScript.src).href;
   let library;
   function loadLibrary() {
@@ -31,12 +32,12 @@
         const figure = window.document.createElement('figure');
         figure.className = 'pdf-preview-page';
         const caption = window.document.createElement('figcaption');
-        caption.textContent = `Seite ${number} von ${document.numPages}`;
+        caption.textContent = t('Seite {page} von {pages}', {page: number, pages: document.numPages});
         const canvas = window.document.createElement('canvas');
         canvas.width = Math.ceil(viewport.width);
         canvas.height = Math.ceil(viewport.height);
         canvas.setAttribute('role', 'img');
-        canvas.setAttribute('aria-label', `PDF-Seite ${number} von ${document.numPages}. Über „PDF öffnen“ ist das vollständige Dokument zugänglich.`);
+        canvas.setAttribute('aria-label', t('PDF-Seite {page} von {pages}. Über „PDF öffnen“ ist das vollständige Dokument zugänglich.', {page: number, pages: document.numPages}));
         figure.append(caption, canvas);
         container.append(figure);
         await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;

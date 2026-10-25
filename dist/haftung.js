@@ -1,4 +1,5 @@
 (() => {
+  const t = window.mmjI18n.t;
   const form = document.getElementById('waiver-form');
   const birth = document.getElementById('waiver-birth');
   const date = document.getElementById('waiver-date');
@@ -75,7 +76,7 @@
     context.stroke();
     inkLength += Math.hypot(next.x - previous.x, next.y - previous.y);
     previous = next;
-    status.textContent = inkLength >= 20 ? 'Unterschrift erfasst.' : 'Bitte im Feld unterschreiben.';
+    status.textContent = inkLength >= 20 ? t('Unterschrift erfasst.') : t('Bitte im Feld unterschreiben.');
   });
   function endDrawing(event) {
     if (event.pointerId !== pointer) return;
@@ -89,24 +90,24 @@
     clearDrawing();
     attachment.value = '';
     attachment.setCustomValidity('');
-    status.textContent = 'Unterschrift gelöscht. Bitte erneut unterschreiben oder ein Bild hochladen.';
+    status.textContent = t('Unterschrift gelöscht. Bitte erneut unterschreiben oder ein Bild hochladen.');
   });
   attachment.addEventListener('change', () => {
     attachment.setCustomValidity('');
     const file = attachment.files[0];
     if (!file) {
-      status.textContent = inkLength >= 20 ? 'Unterschrift erfasst.' : 'Noch keine Unterschrift vorhanden.';
+      status.textContent = inkLength >= 20 ? t('Unterschrift erfasst.') : t('Noch keine Unterschrift vorhanden.');
       return;
     }
     clearDrawing();
     if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 2 * 1024 * 1024 || !file.size) {
       attachment.value = '';
-      attachment.setCustomValidity('Bitte ein PNG- oder JPG-Bild mit maximal 2 MB auswählen.');
-      status.textContent = 'Das Bild konnte nicht übernommen werden. Bitte ein PNG- oder JPG-Bild mit maximal 2 MB auswählen.';
+      attachment.setCustomValidity(t('Bitte ein PNG- oder JPG-Bild mit maximal 2 MB auswählen.'));
+      status.textContent = t('Das Bild konnte nicht übernommen werden. Bitte ein PNG- oder JPG-Bild mit maximal 2 MB auswählen.');
       attachment.reportValidity();
       return;
     }
-    status.textContent = 'Unterschrift als Bild ausgewählt.';
+    status.textContent = t('Unterschrift als Bild ausgewählt.');
   });
 
   const pdfFile = document.getElementById('pdf-file');
@@ -133,7 +134,7 @@
     if (pdfUrl) {
       URL.revokeObjectURL(pdfUrl);
       pdfUrl = null;
-      pdfStatus.textContent = 'Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.';
+      pdfStatus.textContent = t('Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.');
     }
     review.hidden = true;
     preview.querySelectorAll('canvas').forEach(canvas => { canvas.width = 0; canvas.height = 0; });
@@ -152,6 +153,13 @@
     sendButton.disabled = !confirm.checked || generatedRevision !== revision;
   });
 
+  window.addEventListener('mmj:languagechange', () => {
+    invalidatePdf();
+    attachment.setCustomValidity('');
+    document.getElementById('waiver-text-value').value = document.getElementById('waiver-terms').innerText;
+    pdfStatus.textContent = t('Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.');
+  });
+
   function base64(buffer) {
     const bytes = new Uint8Array(buffer);
     let binary = '';
@@ -163,7 +171,7 @@
   function loadFont() {
     if (!fontPromise) {
       fontPromise = fetch('../assets/fonts/Barlow-Regular.ttf').then(response => {
-        if (!response.ok) throw new Error('Schrift konnte nicht geladen werden.');
+        if (!response.ok) throw new Error(t('Schrift konnte nicht geladen werden.'));
         return response.arrayBuffer();
       }).then(base64).catch(error => { fontPromise = null; throw error; });
     }
@@ -173,26 +181,26 @@
     if (inkLength >= 20) return {url: canvas.toDataURL('image/png'), width: canvas.width, height: canvas.height, format: 'PNG'};
     const file = attachment.files[0];
     if (!file || !['image/png', 'image/jpeg'].includes(file.type) || !file.size || file.size > 2 * 1024 * 1024) {
-      throw new Error('Bitte unterschreibe im Feld oder lade ein PNG-/JPG-Bild mit maximal 2 MB hoch.');
+      throw new Error(t('Bitte unterschreibe im Feld oder lade ein PNG-/JPG-Bild mit maximal 2 MB hoch.'));
     }
     const url = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(new Error('Das Unterschriftsbild konnte nicht gelesen werden.'));
+      reader.onerror = () => reject(new Error(t('Das Unterschriftsbild konnte nicht gelesen werden.')));
       reader.readAsDataURL(file);
     });
     const image = await new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error('Das Unterschriftsbild ist ungültig. Bitte wähle ein anderes Bild.'));
+      img.onerror = () => reject(new Error(t('Das Unterschriftsbild ist ungültig. Bitte wähle ein anderes Bild.')));
       img.src = url;
     });
     if (!image.naturalWidth || !image.naturalHeight || image.naturalWidth * image.naturalHeight > 20000000) {
-      throw new Error('Das Unterschriftsbild ist zu groß oder ungültig. Bitte ein kleineres Bild wählen.');
+      throw new Error(t('Das Unterschriftsbild ist zu groß oder ungültig. Bitte ein kleineres Bild wählen.'));
     }
     return {url, width: image.naturalWidth, height: image.naturalHeight, format: file.type === 'image/png' ? 'PNG' : 'JPEG'};
   }
-  function formattedDate(value) { return value.split('-').reverse().join('.'); }
+  function formattedDate(value) { return window.mmjI18n.language === 'en' ? value : value.split('-').reverse().join('.'); }
   createButton.addEventListener('click', async () => {
     if (creating) return;
     updateGuardian();
@@ -206,11 +214,12 @@
     creating = true;
     createButton.disabled = true;
     const currentRevision = revision;
-    pdfStatus.textContent = 'Dein unterschriebenes PDF wird erstellt …';
+    pdfStatus.textContent = t('Dein unterschriebenes PDF wird erstellt …');
     try {
-      if (!window.jspdf || !window.buildWaiverPdf) throw new Error('Die PDF-Funktion konnte nicht geladen werden. Bitte lade die Seite erneut.');
+      if (!window.jspdf || !window.buildWaiverPdf) throw new Error(t('Die PDF-Funktion konnte nicht geladen werden. Bitte lade die Seite erneut.'));
       const data = {
         documentId: crypto.randomUUID(),
+        language: window.mmjI18n.language,
         firstName: document.getElementById('waiver-first').value,
         lastName: document.getElementById('waiver-last').value,
         email: document.getElementById('waiver-email').value,
@@ -218,21 +227,21 @@
         emergency: document.getElementById('waiver-emergency').value,
         birthDate: formattedDate(birth.value), date: formattedDate(date.value),
         minor: minor.checked, guardianName: guardian.disabled ? '' : document.getElementById('guardian-name').value,
-        createdAt: new Date().toLocaleString('de-AT'),
+        createdAt: new Date().toLocaleString(window.mmjI18n.language === 'en' ? 'en-GB' : 'de-AT'),
         clauses: [...document.querySelectorAll('.waiver-clause')].map(clause => ({
           title: clause.querySelector('h3').textContent.replace(/^\s*\d+\s*/, ''),
           text: clause.querySelector('p').textContent
         }))
       };
       const [signature, font] = await Promise.all([signatureImage(), loadFont()]);
-      if (currentRevision !== revision) throw new Error('Die Angaben wurden während der Erstellung geändert. Bitte erstelle das PDF erneut.');
+      if (currentRevision !== revision) throw new Error(t('Die Angaben wurden während der Erstellung geändert. Bitte erstelle das PDF erneut.'));
       data.signature = signature;
       const pdf = window.buildWaiverPdf(window.jspdf.jsPDF, data, font);
       const blob = pdf.output('blob');
-      if (blob.size > 9 * 1024 * 1024) throw new Error('Das PDF ist zu groß für den Versand. Bitte verwende ein kleineres Unterschriftsbild.');
+      if (blob.size > 9 * 1024 * 1024) throw new Error(t('Das PDF ist zu groß für den Versand. Bitte verwende ein kleineres Unterschriftsbild.'));
       const filename = `haftungsausschluss-${date.value}-${data.documentId.slice(0, 8)}.pdf`;
       pdfUrl = URL.createObjectURL(blob);
-      preview.textContent = 'Alle PDF-Seiten werden für die Vorschau geladen …';
+      preview.textContent = t('Alle PDF-Seiten werden für die Vorschau geladen …');
       const download = document.getElementById('pdf-download');
       download.href = pdfUrl;
       download.download = filename;
@@ -244,25 +253,25 @@
       } catch (error) {
         if (currentRevision === revision) {
           preview.replaceChildren();
-          preview.textContent = 'Die Vorschau konnte nicht geladen werden. Bitte öffne oder lade das PDF über die Links unten und prüfe dort alle Seiten vor dem Versand.';
+          preview.textContent = t('Die Vorschau konnte nicht geladen werden. Bitte öffne oder lade das PDF über die Links unten und prüfe dort alle Seiten vor dem Versand.');
           preview.setAttribute('aria-busy', 'false');
         }
       }
-      if (currentRevision !== revision) throw new Error('Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.');
+      if (currentRevision !== revision) throw new Error(t('Die Angaben wurden geändert. Bitte erstelle und prüfe das PDF erneut.'));
       try {
         const transfer = new DataTransfer();
         transfer.items.add(new File([blob], filename, {type: 'application/pdf'}));
         pdfFile.files = transfer.files;
-        if (!pdfFile.files.length) throw new Error('Kein PDF angehängt.');
+        if (!pdfFile.files.length) throw new Error(t('Kein PDF angehängt.'));
       } catch (error) {
-        throw new Error('Dein Browser unterstützt den direkten PDF-Versand nicht. Lade das PDF herunter und sende es als Anhang an panoramacompound@gmail.com.');
+        throw new Error(t('Dein Browser unterstützt den direkten PDF-Versand nicht. Lade das PDF herunter und sende es als Anhang an panoramacompound@gmail.com.'));
       }
       documentId.value = data.documentId;
       generatedRevision = currentRevision;
       confirm.disabled = false;
-      pdfStatus.textContent = 'PDF erstellt. Bitte prüfe das Dokument und bestätige es unten vor dem Versand.';
+      pdfStatus.textContent = t('PDF erstellt. Bitte prüfe das Dokument und bestätige es unten vor dem Versand.');
     } catch (error) {
-      pdfStatus.textContent = error.message || 'Das PDF konnte nicht erstellt werden. Bitte versuche es erneut.';
+      pdfStatus.textContent = error.message || t('Das PDF konnte nicht erstellt werden. Bitte versuche es erneut.');
     } finally {
       creating = false;
       createButton.disabled = false;
@@ -272,7 +281,7 @@
   form.addEventListener('submit', event => {
     if (creating || generatedRevision !== revision || !confirm.checked || !pdfFile.files.length || !form.checkValidity()) {
       event.preventDefault();
-      pdfStatus.textContent = 'Bitte erstelle das aktuelle PDF, prüfe es und bestätige anschließend den Versand.';
+      pdfStatus.textContent = t('Bitte erstelle das aktuelle PDF, prüfe es und bestätige anschließend den Versand.');
       form.reportValidity();
     }
   });

@@ -25,3 +25,5 @@ Quellen:
 - Verein soll bestätigen, dass die elektronische Unterschrift anstelle der PDF-Unterschrift akzeptiert wird und wie lange Haftungserklärungen tatsächlich benötigt werden. Die bestehende Aufbewahrungsvorgabe von 60 Tagen wurde vorläufig beibehalten.
 
 - Mobile PDF-Vorschau: Alle Seiten werden mit lokalem PDF.js 6.4.299 (Legacy-Build, Apache-2.0, Lizenz unter `dist/assets/vendor/pdfjs/LICENSE`) auf Canvas dargestellt. Kein eingebetteter Browser-PDF-Viewer nötig. Bei einem Darstellungsfehler bleiben Öffnen und Download zur vollständigen Prüfung verfügbar.
+
+- Sprachwahl: DE/EN auf Hauptseite, Impressum, Datenschutz und Haftungsausschluss. Nur die Sprache wird im sessionStorage gespeichert; `?lang=de` / `?lang=en` erhält sie in internen Links. Der Sprachwechsel erhält Eingaben und Unterschrift, verwirft jedoch eine bestehende PDF-Freigabe. Das PDF wird einschließlich Erklärung und Beschriftungen in der gewählten Sprache erstellt. Das verlinkte Original-PDF bleibt deutsch.
